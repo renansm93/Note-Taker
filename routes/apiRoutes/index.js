@@ -1,65 +1,51 @@
-// const router = require("express").Router();
-// const notesRoutes = require("./noteRoutes");
-
-// router.use(notesRoutes);
-
-// module.exports = router;
-
-const path = require("path");
-const router = require("express").Router();
-
-
-
-//const router = require("express").Router();
-let data = require("../../db/db.json");
-const { v4: uuidv4 } = require("uuid");
-const fs = require("fs");
-//const path = require("path");
-
-
+let wPath = require("path");
+let wRouter = require("express").Router();
+let wData = require("../../db/db.json");
+let {v4: uuidv4} = require("uuid");
+let fs = require("fs");
 
 // GET /api/notes
-router.get("/notes", (req, res) => {
-  console.log({ data });
-  res.json(data);
+wRouter.get("/notes", (req, res) => {
+  console.log({wData});
+  res.json(wData);
 });
 
 // DELETE /api/notes/:id
 // get one specific note, req.body.id, readfile db.json, find entry that matches that id
-router.delete("/notes/:id", (req, res) => {
+wRouter.delete("/notes/:id", (req, res) => {
   // rewrite data and return only elements that DON'T match deleted note ID
-  data = data.filter((el) => el.id !== req.params.id);
+  wData = wData.filter((el) => el.id !== req.params.id);
   fs.writeFile(
-    path.join(__dirname, "../../db/db.json"),
-    JSON.stringify(data),
+    wPath.join(__dirname, "../../db/db.json"),
+    JSON.stringify(wData),
     function (err) {
       if (err) {
         res.status(404).json({ error: err });
       }
-      res.json(data);
+      res.json(wData);
     }
   );
 });
 
 // POST /api/notes
 //   create new UUID, take note out of req.body, apply UUID, save to db.json
-router.post("/notes", (req, res) => {
+wRouter.post("/notes", (req, res) => {
   // spread operator
-  const newNote = { ...req.body, id: uuidv4() };
+  let newNote = { ...req.body, id: uuidv4() };
   console.log(newNote);
   console.log(req.body);
-  data.unshift(newNote);
+  wData.unshift(newNote);
   // joins relative to absolute path
   fs.writeFile(
-    path.join(__dirname, "../../db/db.json"),
-    JSON.stringify(data),
+    wPath.join(__dirname, "../../db/db.json"),
+    JSON.stringify(wData),
     function (err) {
       if (err) {
         res.status(404).json({ error: err });
       }
-      res.json(data);
+      res.json(wData);
     }
   );
 });
 
-module.exports = router;
+module.exports = wRouter;

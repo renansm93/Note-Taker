@@ -1,17 +1,14 @@
-const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 3001;
+let wExpress = require("express");
+let wCode = wExpress();
+let wapiRoutes = require("./routes/apiRoutes");
+let whtmlRoutes = require("./routes/htmlRoutes");
+let wPort = process.env.PORT || 3001;
 
-const apiRoutes = require("./routes/apiRoutes");
-const htmlRoutes = require("./routes/htmlRoutes");
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static("public"));
+wCode.use(wExpress.urlencoded({ extended: true }));
+wCode.use(wExpress.json());
+wCode.use(wExpress.static("public"));
+wCode.use("/api", wapiRoutes);
+wCode.use("/", whtmlRoutes);
+wCode.listen(wPort, () => console.log(`Listening on wPort: ${wPort}`));
 
-app.use("/api", apiRoutes);
-app.use("/", htmlRoutes);
-
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
-
-// Test js
